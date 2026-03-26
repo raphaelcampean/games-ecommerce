@@ -10,4 +10,5 @@ import com.gamesecommerce.store.model.Product;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, UUID> {
     Product findByName(String name);
+    Product findBySlug(String slug);
 }

@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -29,15 +31,15 @@ public class ProductController {
     }
     
     @PostMapping
-    public ResponseEntity createProduct(@RequestBody Product product) {
+    public ResponseEntity createProduct(@RequestBody @Validated Product product) {
         Product createdProduct = productService.create(product);
 
         return ResponseEntity.status(201).body(createdProduct);
     }
     
-    @GetMapping("/{id}")
-    public ResponseEntity getProduct(@PathVariable UUID id) {
-        Product product = productService.findById(id);
+    @GetMapping("/{slug}")
+    public ResponseEntity getProduct(@PathVariable String slug) {
+        Product product = productService.findBySlug(slug);
 
         if (product == null) {
             return ResponseEntity.notFound().build();
@@ -52,4 +54,10 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity updateProduct(@PathVariable UUID id, @RequestBody @Validated Product product) {
+        Product updatedProduct = productService.update(id, product);
+
+        return ResponseEntity.ok().body(updatedProduct);
+    }
 }

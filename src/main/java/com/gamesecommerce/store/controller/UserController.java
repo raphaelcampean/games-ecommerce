@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +31,7 @@ public class UserController {
     }
     
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> createUser(@RequestBody @Validated User user) {
         return ResponseEntity.status(201).body(userService.create(user));
     }
 
@@ -41,7 +42,7 @@ public class UserController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<User> editUser(@PathVariable UUID id, @RequestBody User user) {
+    public ResponseEntity<User> editUser(@PathVariable UUID id, @RequestBody @Validated User user) {
         try {
             user.setId(id);
             userService.edit(user);

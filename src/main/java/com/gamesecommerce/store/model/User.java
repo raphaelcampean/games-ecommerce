@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,8 +42,10 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.USER;
+    @CreationTimestamp
     private LocalDateTime createdAt;
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     public enum Role {

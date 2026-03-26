@@ -1,6 +1,5 @@
 package com.gamesecommerce.store.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,6 @@ import com.gamesecommerce.store.record.LoginResponseDTO;
 import com.gamesecommerce.store.service.TokenService;
 
 @RestController
-@RequestMapping("/auth")
 public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
