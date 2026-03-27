@@ -2,6 +2,7 @@ package com.gamesecommerce.store.controller;
 
 import com.gamesecommerce.store.model.User;
 import com.gamesecommerce.store.record.OrderRequestDTO;
+import com.gamesecommerce.store.record.OrderResponseDTO;
 import com.gamesecommerce.store.repository.UserRepository;
 import com.gamesecommerce.store.service.OrderService;
 
@@ -37,6 +38,21 @@ public class OrderController {
 
         var newOrder = orderService.createOrder(orderRequestDTO, user);
 
-        return ResponseEntity.ok(newOrder);
+        OrderResponseDTO response = new OrderResponseDTO(
+            newOrder.getId(),
+            newOrder.getStatus().name(),
+            newOrder.getTotalPrice().doubleValue(),
+            newOrder.getCreatedAt(),
+            newOrder.getItems().stream()
+                .map(item -> new OrderItemResponseDTO(
+                    item.getId(),
+                    item.getProduct().getName(),
+                    item.getPrice().doubleValue(),
+                    item.getQuantity()
+                ))
+                .toList()
+        );
+
+        return ResponseEntity.ok(response);
     }
 }

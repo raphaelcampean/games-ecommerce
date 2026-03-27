@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.gamesecommerce.store.exception.BusinessException;
 import com.gamesecommerce.store.model.Order;
 import com.gamesecommerce.store.model.OrderItem;
 import com.gamesecommerce.store.model.User;
@@ -26,7 +27,7 @@ public class OrderService {
         var product = productService.findById(dto.productId());
         
         if (product.getStockQuantity() < dto.quantity()) {
-            throw new RuntimeException("Not enough stock for product: " + product.getName());
+            throw new BusinessException("Not enough stock for product: " + product.getName());
         }
 
         product.setStockQuantity(product.getStockQuantity() - dto.quantity());

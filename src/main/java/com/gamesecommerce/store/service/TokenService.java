@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.gamesecommerce.store.exception.UnauthorizedException;
 import com.gamesecommerce.store.model.User;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +27,7 @@ public class TokenService {
                     .sign(algorithm);
             return token;
         } catch (Exception e) {
-            throw new RuntimeException("Error generating token: " + e.getMessage());
+            throw new UnauthorizedException("Error generating token: " + e.getMessage());
         }
     }
 
@@ -40,7 +41,7 @@ public class TokenService {
                     .getSubject();
             return email;
         } catch (Exception e) {
-            throw new RuntimeException("Invalid token: " + e.getMessage());
+            throw new UnauthorizedException("Invalid token: " + e.getMessage());
         }
     }
 
