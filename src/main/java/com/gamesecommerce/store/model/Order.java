@@ -57,4 +57,8 @@ public class Order {
         COMPLETED,
         CANCELLED
     }
+
+    public User getUser() {
+        return user;
+    }
 }
