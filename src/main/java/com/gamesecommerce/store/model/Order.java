@@ -55,7 +55,9 @@ public class Order {
     public enum Status {
         PENDING,
         COMPLETED,
-        CANCELLED
+        CANCELLED,
+        REFUNDED,
+        REFUSED
     }
 
     public User getUser() {
