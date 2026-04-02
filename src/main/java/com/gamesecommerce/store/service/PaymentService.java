@@ -4,12 +4,14 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import com.gamesecommerce.store.model.Order;
 import com.gamesecommerce.store.repository.OrderRepository;
 import com.stripe.model.Event;
 import com.stripe.model.PaymentIntent;
 
+@Service
 public class PaymentService {
     @Autowired
     OrderService orderService;
@@ -20,19 +22,20 @@ public class PaymentService {
     @Autowired
     ProductService productService;
 
-    public ResponseEntity<Order> processPayment(Event event) {
+    public void processPayment(Event event) {
         switch (event.getType()) {
             case "payment_intent.succeeded":
-                return handlePaymentIntentSucceeded(event);
+                handlePaymentIntentSucceeded(event);
+                break;
             case "payment_intent.payment_failed":
-                return handlePaymentIntentFailed(event);
+                handlePaymentIntentFailed(event);
+                break;
             default:
                 System.out.println("Evento não tratado: " + event.getType());
         }
-        return ResponseEntity.ok().body(null);
     }
 
-    public ResponseEntity<Order> handlePaymentIntentSucceeded(Event event) {
+    public void handlePaymentIntentSucceeded(Event event) {
         PaymentIntent intent = extracPaymentIntent(event);
 
         Order order = getOrderFromIntent(intent);
@@ -40,11 +43,9 @@ public class PaymentService {
         orderRepository.save(order);
 
         System.out.println("Pagamento aprovado para o pedido: " + order.getId());
-
-        return ResponseEntity.ok().body(order);
     }
 
-    public ResponseEntity<Order> handlePaymentIntentFailed(Event event) {
+    public void handlePaymentIntentFailed(Event event) {
         PaymentIntent intent = extracPaymentIntent(event);
 
         Order order = getOrderFromIntent(intent);
@@ -52,8 +53,6 @@ public class PaymentService {
         orderRepository.save(order);
 
         System.out.println("Pagamento falhou para o pedido: " + order.getId());
-
-        return ResponseEntity.ok().body(order);
     }
 
     public PaymentIntent extracPaymentIntent(Event event) {
@@ -63,6 +62,11 @@ public class PaymentService {
 
     public Order getOrderFromIntent(PaymentIntent intent) {
         String orderIdStr = intent.getMetadata().get("order_id");
+
+        if (orderIdStr == null) {
+            throw new IllegalArgumentException("ID do pedido não encontrado no metadata do PaymentIntent");
+        }
+
         UUID orderId = UUID.fromString(orderIdStr);
 
         Order order = orderRepository.findById(orderId).orElseThrow();

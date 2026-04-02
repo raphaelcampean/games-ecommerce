@@ -55,7 +55,7 @@ public class PaymentController {
     public ResponseEntity<String> handleWebhook(@RequestBody String payload, @RequestHeader("Stripe-Signature") String sigHeader) throws SignatureVerificationException {
         Event event = Webhook.constructEvent(payload, sigHeader, System.getenv("STRIPE_WEBHOOK_SECRET"));
 
-        ResponseEntity<Order> result = paymentService.processPayment(event);
+        paymentService.processPayment(event);
 
         return ResponseEntity.ok("Webhook processado com sucesso");
     }

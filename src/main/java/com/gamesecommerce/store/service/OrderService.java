@@ -156,4 +156,8 @@ public class OrderService {
             items
         );
     }
+
+    public List<Order> getOrderByUser(User user) {
+        return orderRepository.findByUserId(user.getId());
+    }
 }

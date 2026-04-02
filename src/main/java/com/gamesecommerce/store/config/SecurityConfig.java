@@ -38,6 +38,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.POST, "/users").permitAll()
                     .requestMatchers(HttpMethod.POST, "/login").permitAll()
                     .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
+                    .requestMatchers("/api/webhook").permitAll()
                     .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/products/**").hasRole("ADMIN")
                     .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
