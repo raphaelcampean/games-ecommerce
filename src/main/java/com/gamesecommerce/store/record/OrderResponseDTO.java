@@ -17,9 +17,12 @@ public record OrderResponseDTO(
     public OrderResponseDTO(Order order) {
         this(
             order.getId(),
+            order.getStatus() != null ? order.getStatus().toString() : null, 
             order.getTotalPrice(),
-            order.getStatus().toString(), // Converte o Enum para String
-            order.getCreatedAt()
+            order.getCreatedAt(),
+            order.getItems() == null ? List.of() : order.getItems().stream()
+                .map(OrderItemResponseDTO::new) // Referência de método (mais limpo)
+                .toList()
         );
     }
 }

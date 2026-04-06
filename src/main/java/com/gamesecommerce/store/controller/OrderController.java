@@ -33,13 +33,20 @@ public class OrderController {
 
     @GetMapping
     public ResponseEntity<List<OrderResponseDTO>> getOrders(@AuthenticationPrincipal UserDetails userDetails) {
-        User user = getUserFromUserDetails(userDetails);
-        if (user == null) return ResponseEntity.status(401).build();
 
-        // Transforme sua lista de Order em OrderResponseDTO aqui
+        if (userDetails == null) {
+            return ResponseEntity.status(401).build();
+        }
+
+        User user = getUserFromUserDetails(userDetails);
+
+        if (user == null) {
+            return ResponseEntity.status(401).build();
+        }
+
         List<OrderResponseDTO> response = orderService.getOrderByUser(user)
             .stream()
-            .map(order -> new OrderResponseDTO(order)) // Exemplo de conversão
+            .map(OrderResponseDTO::new)
             .toList();
 
         return ResponseEntity.ok(response);

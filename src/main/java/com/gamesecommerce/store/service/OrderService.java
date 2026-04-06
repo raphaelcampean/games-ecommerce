@@ -143,8 +143,8 @@ public class OrderService {
             .map(item -> new OrderItemResponseDTO(
                 item.getProduct().getId(),
                 item.getProduct().getName(),
-                item.getPrice(),
-                item.getQuantity()
+                item.getQuantity(),
+                item.getPrice()
             ))
             .toList();
 
@@ -157,6 +157,7 @@ public class OrderService {
         );
     }
 
+    @Transactional
     public List<Order> getOrderByUser(User user) {
         return orderRepository.findByUserId(user.getId());
     }
