@@ -1,65 +1,172 @@
-# Games E-commerce API
-Esta é uma API robusta para gerenciamento de um e-commerce de jogos, desenvolvida com Java 17 e Spring Boot. O projeto foi construído com foco em segurança da informação (Cybersecurity), integridade de dados e alta cobertura de testes.
+# 🎮 Games E-commerce API
 
-🚀 Tecnologias Utilizadas
-Backend: Java 17, Spring Boot 3.x
+API REST para gerenciamento de um e-commerce de jogos, desenvolvida com **Java 17** e **Spring Boot 3**.
+O projeto foi estruturado com foco em **boas práticas de backend**, **segurança**, **integridade de dados** e **alta cobertura de testes**.
 
-Banco de Dados: PostgreSQL (Produção/Dev), H2 Database (Testes)
+---
 
-Segurança: Spring Security, BCrypt Password Encoding
+## 🚀 Tecnologias
 
-Testes: JUnit 5, Mockito, AssertJ
+* **Java 17**
+* **Spring Boot 3.x**
+* **Spring Security**
+* **PostgreSQL** (produção/desenvolvimento)
+* **H2 Database** (testes)
+* **JUnit 5**
+* **Mockito**
+* **AssertJ**
+* **Maven**
+* **Docker (opcional)**
 
-Ferramentas: Maven, Docker, ADB (Android Debug Bridge) para testes mobile
+---
 
-🛡️ Funcionalidades de Cybersecurity
-Diferente de sistemas comuns, esta aplicação implementa camadas extras de proteção:
+## 🔐 Segurança
 
-Password Hashing: Uso de BCryptPasswordEncoder para garantir que senhas nunca sejam armazenadas em texto plano.
+A aplicação implementa práticas essenciais de segurança:
 
-Data Integrity: Validações rigorosas no UserService para impedir duplicidade de e-mails e usuários.
+* **Password Hashing**
 
-Audit-Ready: Estrutura preparada para logs de tentativas de acesso e monitoramento de falhas.
+  * Senhas protegidas com `BCryptPasswordEncoder`
+  * Nunca armazenadas em texto plano
 
-🧪 Estrutura de Testes
-A aplicação segue a pirâmide de testes para garantir estabilidade:
+* **Validação de Dados**
 
-1. Testes Unitários (Service Layer)
-Focados em lógica de negócio e segurança, utilizando Mockito para isolar dependências.
+  * Prevenção de duplicidade (e-mail/usuário)
+  * Validação de entrada com DTOs
 
-Validação de força de senha.
+* **Estrutura para Auditoria**
 
-Garantia de unicidade de credenciais.
+  * Preparada para logging de autenticação e falhas
 
-2. Testes de Integração (Repository Layer)
-Utilizam @DataJpaTest e banco H2 para validar queries complexas.
+---
 
-Otimização de Performance: Testes de queries com JOIN FETCH para evitar o problema de N+1.
+## 🧪 Testes
 
-📱 Testes em Hardware Real (Samsung J4)
-Um diferencial deste projeto é a validação de consumo da API em dispositivos físicos de baixo custo, garantindo que a aplicação seja leve e acessível.
+O projeto segue a pirâmide de testes:
 
-Debug: Realizado via ADB no Pop!_OS.
+### ✔️ Testes Unitários (Service)
 
-Ambiente: Testes de latência e integração em rede local Wi-Fi.
+* Foco em regras de negócio
+* Uso de Mockito para isolamento
+* Validação de:
 
-⚙️ Como Executar
-Pré-requisitos
-JDK 17
+  * regras de usuário
+  * integridade de dados
 
-Maven 3.x
+### ✔️ Testes de Integração (Repository)
 
-PostgreSQL
+* Uso de `@DataJpaTest`
+* Banco em memória (H2)
+* Testes de queries e performance (ex: `JOIN FETCH`)
 
-Passos
-Clone o repositório:
+---
 
+## 📱 Testes em Dispositivo Real
+
+A API foi testada em hardware real de baixo custo para validar:
+
+* desempenho em redes reais
+* latência de requisições
+* compatibilidade com dispositivos limitados
+
+**Ferramentas utilizadas:**
+
+* ADB (Android Debug Bridge)
+* Ambiente Linux (Pop!_OS)
+
+---
+
+## ⚙️ Como executar o projeto
+
+### 📌 Pré-requisitos
+
+* Java 17
+* Maven 3+
+* PostgreSQL
+
+---
+
+### 📥 Clonar o repositório
+
+```bash
 git clone https://github.com/seu-usuario/games-ecommerce.git
-Configure o banco de dados no application.properties.
+cd games-ecommerce
+```
 
-Execute a aplicação:
+---
 
+### ⚙️ Configurar o banco de dados
+
+Edite o arquivo:
+
+```
+src/main/resources/application.properties
+```
+
+Exemplo:
+
+```properties
+spring.datasource.url=jdbc:postgresql://localhost:5432/gamesdb
+spring.datasource.username=seu_usuario
+spring.datasource.password=sua_senha
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```
+
+---
+
+### ▶️ Rodar a aplicação
+
+```bash
+./mvnw spring-boot:run
+```
+
+ou
+
+```bash
 mvn spring-boot:run
+```
 
-Para rodar os testes:
+---
+
+### 🧪 Rodar os testes
+
+```bash
+./mvnw test
+```
+
+ou
+
+```bash
 mvn test
+```
+
+---
+
+## 📄 Estrutura do Projeto
+
+```
+src/
+ ├── main/
+ │   ├── java/
+ │   │   └── ... (controllers, services, repositories)
+ │   └── resources/
+ └── test/
+     └── java/ (testes unitários e de integração)
+```
+
+---
+
+## 📌 Melhorias futuras
+
+* Documentação com Swagger/OpenAPI
+* Deploy em ambiente cloud
+* Implementação de cache
+* Monitoramento e logs estruturados
+
+---
+
+## 👨‍💻 Autor
+
+Desenvolvido por Raphael Campean.
