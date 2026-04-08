@@ -89,7 +89,7 @@ A API foi testada em hardware real de baixo custo para validar:
 ### 📥 Clonar o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/games-ecommerce.git
+git clone https://github.com/raphaelcampean/games-ecommerce.git
 cd games-ecommerce
 ```
 
