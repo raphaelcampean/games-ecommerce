@@ -6,6 +6,8 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -13,13 +15,13 @@ import com.gamesecommerce.store.model.Order;
 import com.gamesecommerce.store.model.OrderItem;
 import com.gamesecommerce.store.model.Product;
 import com.gamesecommerce.store.model.User;
-import com.gamesecommerce.store.repository.OrderRepository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.persistence.EntityManager;
 
 @DataJpaTest
 @ActiveProfiles("test")
+@AutoConfigureTestDatabase(replace = Replace.NONE)
 public class OrderRepositoryTest {
     @Autowired
     EntityManager entityManager;

@@ -158,7 +158,7 @@ public class OrderService {
     }
 
     @Transactional
-    public List<Order> getOrderByUser(User user) {
-        return orderRepository.findByUserId(user.getId());
+    public List<Order> getOrderByUser(Optional<User> user) {
+        return orderRepository.findByUserId(user.get().getId());
     }
 }

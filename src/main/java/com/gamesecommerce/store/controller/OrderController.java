@@ -4,13 +4,13 @@ import com.gamesecommerce.store.model.Order;
 import com.gamesecommerce.store.model.User;
 import com.gamesecommerce.store.record.OrderRequestDTO;
 import com.gamesecommerce.store.record.OrderResponseDTO;
-import com.gamesecommerce.store.repository.OrderRepository;
 import com.gamesecommerce.store.repository.UserRepository;
 import com.gamesecommerce.store.service.OrderService;
 
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +44,7 @@ public class OrderController {
             return ResponseEntity.status(401).build();
         }
 
-        List<OrderResponseDTO> response = orderService.getOrderByUser(user)
+        List<OrderResponseDTO> response = orderService.getOrderByUser(Optional.ofNullable(user))
             .stream()
             .map(OrderResponseDTO::new)
             .toList();
@@ -58,7 +58,7 @@ public class OrderController {
             return ResponseEntity.status(401).body(null);
         }
 
-        User user = userRepository.findByUsername(userDetails.getUsername());
+        Optional<User> user = userRepository.findByUsername(userDetails.getUsername());
 
         if (user == null) {
             return ResponseEntity.status(404).body(null);
@@ -122,12 +122,8 @@ public class OrderController {
     }
 
     private User getUserFromUserDetails(UserDetails userDetails) {
-        User user = userRepository.findByUsername(userDetails.getUsername());
-
-        if (user == null) {
-            return null;
-        }
-
-        return user;
+        Optional<User> userOptional = userRepository.findByUsername(userDetails.getUsername());
+        
+        return userOptional.orElse(null);
     }
 }

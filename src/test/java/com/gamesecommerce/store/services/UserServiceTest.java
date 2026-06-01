@@ -1,4 +1,5 @@
 package com.gamesecommerce.store.services;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,7 +40,7 @@ class UserServiceTest {
         user.setEmail("raphael@example.com");
         user.setPassword("secret123");
 
-        when(userRepository.findByUsernameOrEmail(any(), any())).thenReturn(null);
+        when(userRepository.findByUsernameOrEmail(any(), any())).thenReturn(Optional.empty());
         when(passwordEncoder.encode("secret123")).thenReturn("encoded_hash");
         when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -57,7 +58,8 @@ class UserServiceTest {
         user.setUsername("exists");
         user.setEmail("exists@email.com");
 
-        when(userRepository.findByUsernameOrEmail("exists", "exists@email.com")).thenReturn(new User());
+        when(userRepository.findByUsernameOrEmail("exists", "exists@email.com"))
+            .thenReturn(Optional.of(new User()));
 
         assertThatThrownBy(() -> userService.create(user))
             .isInstanceOf(RuntimeException.class)
@@ -83,6 +85,10 @@ class UserServiceTest {
         updatedData.setPassword("new_pass");
 
         when(userRepository.findById(id)).thenReturn(Optional.of(existingUser));
+        
+        when(userRepository.findByUsername("new")).thenReturn(Optional.empty());
+        when(userRepository.findByEmail("new@email.com")).thenReturn(Optional.empty());
+        
         when(passwordEncoder.encode("new_pass")).thenReturn("new_hash");
         when(userRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 

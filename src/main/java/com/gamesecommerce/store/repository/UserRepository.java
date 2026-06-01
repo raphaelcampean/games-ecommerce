@@ -1,5 +1,6 @@
 package com.gamesecommerce.store.repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +10,7 @@ import com.gamesecommerce.store.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-    User findByUsername(String username);
-    User findByEmail(String email);
-    User findByUsernameOrEmail(String username, String email);
+    Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
+    Optional<User> findByUsernameOrEmail(String username, String email);
 }

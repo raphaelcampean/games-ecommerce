@@ -1,11 +1,14 @@
 package com.gamesecommerce.store.controller;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gamesecommerce.store.model.Product;
@@ -59,5 +62,20 @@ public class ProductController {
         Product updatedProduct = productService.update(id, product);
 
         return ResponseEntity.ok().body(updatedProduct);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<Product>> getFilteredProducts(
+        @RequestParam(required = false) String genre,
+        @RequestParam(required = false) String platform,
+        @RequestParam(required = false) String developer,
+        @RequestParam(required = false) BigDecimal minPrice,
+        @RequestParam(required = false) BigDecimal maxPrice
+    ) {
+        List<Product> products = productService.findWithFilters(
+            genre, platform, developer, minPrice, maxPrice
+        );
+        
+        return ResponseEntity.ok(products);
     }
 }

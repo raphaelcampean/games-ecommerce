@@ -8,6 +8,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.gamesecommerce.store.repository.UserRepository;
 import com.gamesecommerce.store.service.TokenService;
@@ -34,7 +35,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             var subject = tokenService.validateToken(token);
             
             if (subject != null) {
-                UserDetails user = userRepository.findByEmail(subject);
+                UserDetails user = userRepository.findByEmail(subject).orElseThrow(() -> new UsernameNotFoundException("User not found"));
                 
                 if (user != null) {
                     var auth = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

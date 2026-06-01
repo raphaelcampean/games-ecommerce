@@ -8,6 +8,8 @@ import java.util.HashSet;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,6 +35,7 @@ public class Genre {
     private String slug;
 
     @ManyToMany(mappedBy = "genres")
+    @JsonIgnore
     private Set<Product> products = new HashSet<>();
 
     @CreationTimestamp

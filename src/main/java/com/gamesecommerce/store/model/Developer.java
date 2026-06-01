@@ -8,6 +8,8 @@ import java.util.HashSet;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,7 +34,8 @@ public class Developer {
     @Column(nullable = false, unique = true)
     private String slug;
 
-    @ManyToMany(mappedBy = "developers")
+    @OneToMany(mappedBy = "developer")
+    @JsonIgnore
     private Set<Product> products = new HashSet<>();
 
     @CreationTimestamp
