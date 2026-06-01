@@ -1,7 +1,5 @@
 package com.gamesecommerce.store.service;
 
-import java.math.BigDecimal;
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,9 +72,5 @@ public class ProductService {
 
     public Product findBySlug(String slug) {
         return productRepository.findBySlug(slug);
-    }
-
-    public List<Product> findWithFilters(String genreSlug, String platformSlug, String developerSlug, BigDecimal minPrice, BigDecimal maxPrice) {
-        return productRepository.findWithFilters(genreSlug, platformSlug, developerSlug, minPrice, maxPrice);
     }
 }
