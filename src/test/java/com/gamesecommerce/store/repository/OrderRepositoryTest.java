@@ -3,6 +3,10 @@ package com.gamesecommerce.store.repository;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import jakarta.persistence.EntityManager;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,24 +15,22 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import com.gamesecommerce.store.config.AbstractPostgresContainerTest;
 import com.gamesecommerce.store.model.Order;
 import com.gamesecommerce.store.model.OrderItem;
 import com.gamesecommerce.store.model.Product;
 import com.gamesecommerce.store.model.User;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import jakarta.persistence.EntityManager;
 
 @DataJpaTest
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = Replace.NONE)
-public class OrderRepositoryTest {
+class OrderRepositoryTest extends AbstractPostgresContainerTest {
     @Autowired
-    EntityManager entityManager;
+    private OrderRepository orderRepository;
 
     @Autowired
-    OrderRepository orderRepository;
-    
+    private EntityManager entityManager;
+
     @Test
     @DisplayName("Should find orders by user ID")
     public void testFindByUserId() {
