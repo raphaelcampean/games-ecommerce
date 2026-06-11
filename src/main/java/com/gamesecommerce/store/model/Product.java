@@ -73,4 +73,7 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "developer_id")
     private Developer developer;
+
+    @Column(name = "image_url", length = 1000)
+    private String imageUrl;
 }
