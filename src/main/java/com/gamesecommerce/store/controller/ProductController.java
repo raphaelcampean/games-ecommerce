@@ -2,7 +2,13 @@ package com.gamesecommerce.store.controller;
 
 import java.util.UUID;
 
+import com.gamesecommerce.store.record.OrderResponseDTO;
+import com.gamesecommerce.store.record.ProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,23 +26,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/produtos")
 public class ProductController {
     @Autowired
     ProductService productService;
 
     @GetMapping
-    public ResponseEntity getProducts() {
-        return ResponseEntity.ok().body(productService.getProducts());
-    }
-    
-    @PostMapping
-    public ResponseEntity createProduct(@RequestBody @Validated Product product) {
-        Product createdProduct = productService.create(product);
+    public ResponseEntity<Page<ProductDTO>> listAll(
+            @PageableDefault(size = 20, sort = "name") Pageable pageable) {
 
-        return ResponseEntity.status(201).body(createdProduct);
+        Page<ProductDTO> products = productService.getProducts(pageable);
+
+        return ResponseEntity.ok(products);
     }
-    
+
     @GetMapping("/{slug}")
     public ResponseEntity getProduct(@PathVariable String slug) {
         Product product = productService.findBySlug(slug);
@@ -46,18 +49,5 @@ public class ProductController {
         }
 
         return ResponseEntity.ok().body(product);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteProduct(@PathVariable UUID id) {
-        productService.deleteById(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity updateProduct(@PathVariable UUID id, @RequestBody @Validated Product product) {
-        Product updatedProduct = productService.update(id, product);
-
-        return ResponseEntity.ok().body(updatedProduct);
     }
 }

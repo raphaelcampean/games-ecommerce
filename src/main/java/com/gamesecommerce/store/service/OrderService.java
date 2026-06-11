@@ -1,11 +1,13 @@
 package com.gamesecommerce.store.service;
 
+import org.springframework.data.domain.Pageable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.data.domain.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -157,8 +159,21 @@ public class OrderService {
         );
     }
 
+    public Iterable getOrders(){
+        return orderRepository.findAll();
+    }
+
+    public Optional<Order> getOrderById(UUID id){
+        return orderRepository.findById(id);
+    }
+
     @Transactional
     public List<Order> getOrderByUser(Optional<User> user) {
         return orderRepository.findByUserId(user.get().getId());
+    }
+
+    public Page<OrderResponseDTO> getOrders(Pageable pageable) {
+        return orderRepository.findAll(pageable)
+                .map(OrderResponseDTO::new);
     }
 }

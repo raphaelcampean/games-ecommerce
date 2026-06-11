@@ -10,9 +10,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public abstract class AbstractPostgresContainerTest {
 
     @Container
-    static PostgreSQLContainer<?> postgres =
-            new PostgreSQLContainer<>("postgres:16")
-                    .withReuse(true);
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
 
     @DynamicPropertySource
     static void configure(DynamicPropertyRegistry registry) {
@@ -36,5 +34,7 @@ public abstract class AbstractPostgresContainerTest {
             "spring.datasource.driver-class-name",
             () -> "org.postgresql.Driver"
         );
+
+        registry.add("spring.jpa.hibernate.ddl-auto", () -> "create-drop");
     }
 }

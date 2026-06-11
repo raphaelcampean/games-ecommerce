@@ -22,15 +22,10 @@ import com.gamesecommerce.store.model.User;
 import com.gamesecommerce.store.service.UserService;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/usuarios")
 public class UserController {
     @Autowired
     UserService userService;
-    
-    @GetMapping
-    public ResponseEntity<List<User>> getUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
-    }
     
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody @Validated User user) {

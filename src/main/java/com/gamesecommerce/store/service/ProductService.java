@@ -1,8 +1,12 @@
 package com.gamesecommerce.store.service;
 
+import java.util.List;
 import java.util.UUID;
 
+import com.gamesecommerce.store.record.ProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.gamesecommerce.store.model.Product;
@@ -37,8 +41,9 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Iterable<Product> getProducts() {
-        return productRepository.findAll();
+    public Page<ProductDTO> getProducts(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(ProductDTO::new);
     }
 
     public Product findById(UUID id) {
@@ -72,5 +77,21 @@ public class ProductService {
 
     public Product findBySlug(String slug) {
         return productRepository.findBySlug(slug);
+    }
+
+    public long countProducts(){
+        return productRepository.count();
+    }
+
+    public List<Product> findTop5ByOrderByCreatedAtDesc() {
+        return productRepository.findTop5ByOrderByCreatedAtDesc();
+    }
+
+    public List<Product> findLowStockProducts(int threshold) {
+        return productRepository.findByStockQuantityLessThan(threshold);
+    }
+
+     public long countLowStock() {
+        return productRepository.countByStockQuantityLessThan(5);
     }
 }

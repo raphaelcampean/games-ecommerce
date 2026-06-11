@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/pedidos")
 public class OrderController {
 
     @Autowired
