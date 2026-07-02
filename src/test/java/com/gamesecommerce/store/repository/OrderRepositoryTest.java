@@ -10,9 +10,7 @@ import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.gamesecommerce.store.config.AbstractPostgresContainerTest;
@@ -21,10 +19,10 @@ import com.gamesecommerce.store.model.OrderItem;
 import com.gamesecommerce.store.model.Product;
 import com.gamesecommerce.store.model.User;
 
-@DataJpaTest
+@SpringBootTest
 @ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = Replace.NONE)
 class OrderRepositoryTest extends AbstractPostgresContainerTest {
+
     @Autowired
     private OrderRepository orderRepository;
 
@@ -33,7 +31,7 @@ class OrderRepositoryTest extends AbstractPostgresContainerTest {
 
     @Test
     @DisplayName("Should find orders by user ID")
-    public void testFindByUserId() {
+    void testFindByUserId() {
         User user = createUser();
         Product product = createProduct();
         createOrder(user, product);
@@ -49,9 +47,9 @@ class OrderRepositoryTest extends AbstractPostgresContainerTest {
 
     @Test
     @DisplayName("Should return empty list when no orders for user ID")
-    public void testFindByUserIdNoOrders() {
+    void testFindByUserIdNoOrders() {
         User user = createUser();
-    
+
         List<Order> orders = orderRepository.findByUserId(user.getId());
 
         assertThat(orders).isEmpty();
@@ -62,9 +60,22 @@ class OrderRepositoryTest extends AbstractPostgresContainerTest {
         user.setUsername("johndoe");
         user.setEmail("john.doe@example.com");
         user.setPassword("password");
+
         entityManager.persist(user);
         entityManager.flush();
         return user;
+    }
+
+    private Product createProduct() {
+        Product product = new Product();
+        product.setName("Test Game");
+        product.setDescription("A test game description");
+        product.setSlug("test-game");
+        product.setPrice(new BigDecimal("59.99"));
+
+        entityManager.persist(product);
+        entityManager.flush();
+        return product;
     }
 
     private Order createOrder(User user, Product product) {
@@ -72,13 +83,12 @@ class OrderRepositoryTest extends AbstractPostgresContainerTest {
         order.setUser(user);
         order.setTotalPrice(product.getPrice());
         order.setStatus(Order.Status.PENDING);
-        
-        entityManager.persist(order); 
+
+        entityManager.persist(order);
 
         OrderItem item = createOrderItem(order, product);
-        
         order.setItems(List.of(item));
-        
+
         entityManager.flush();
         return order;
     }
@@ -89,20 +99,8 @@ class OrderRepositoryTest extends AbstractPostgresContainerTest {
         item.setProduct(product);
         item.setQuantity(1);
         item.setPrice(product.getPrice());
-        
+
         entityManager.persist(item);
         return item;
-    }
-
-    private Product createProduct() {
-        Product product = new Product();
-        product.setName("Test Game");
-        product.setDescription("A test game description");
-        product.setSlug("test-game");
-        BigDecimal price = new BigDecimal("59.99");
-        product.setPrice(price);
-        entityManager.persist(product);
-        entityManager.flush();
-        return product;
     }
 }

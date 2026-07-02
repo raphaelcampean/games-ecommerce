@@ -2,12 +2,10 @@ package com.gamesecommerce.store.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.gamesecommerce.store.config.AbstractPostgresContainerTest;
@@ -15,20 +13,21 @@ import com.gamesecommerce.store.model.User;
 
 import jakarta.persistence.EntityManager;
 
-@DataJpaTest
+@SpringBootTest
 @ActiveProfiles("test")
-@AutoConfigureTestDatabase(replace = Replace.NONE)
-public class UserRepositoryTest extends AbstractPostgresContainerTest {
+class UserRepositoryTest extends AbstractPostgresContainerTest {
+
     @Autowired
     private UserRepository userRepository;
-    
+
     @Autowired
     private EntityManager entityManager;
 
     @Test
     @DisplayName("Should find user by username")
-    public void testFindByUsername() {
+    void testFindByUsername() {
         User user = createUser();
+
         entityManager.flush();
         entityManager.clear();
 
@@ -40,7 +39,7 @@ public class UserRepositoryTest extends AbstractPostgresContainerTest {
 
     @Test
     @DisplayName("Should find user by email")
-    public void testFindByEmail() {
+    void testFindByEmail() {
         User user = createUser();
 
         entityManager.flush();
@@ -54,14 +53,17 @@ public class UserRepositoryTest extends AbstractPostgresContainerTest {
 
     @Test
     @DisplayName("Should find user by username or email")
-    public void testFindByUsernameOrEmail() {
+    void testFindByUsernameOrEmail() {
         User user = createUser();
 
         entityManager.flush();
         entityManager.clear();
 
-        User foundByUsername = userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail()).orElse(null);
-        User foundByEmail = userRepository.findByUsernameOrEmail(user.getEmail(), user.getEmail()).orElse(null);
+        User foundByUsername =
+            userRepository.findByUsernameOrEmail(user.getUsername(), user.getEmail()).orElse(null);
+
+        User foundByEmail =
+            userRepository.findByUsernameOrEmail(user.getEmail(), user.getEmail()).orElse(null);
 
         assertThat(foundByUsername).isNotNull();
         assertThat(foundByEmail).isNotNull();
@@ -72,6 +74,7 @@ public class UserRepositoryTest extends AbstractPostgresContainerTest {
         user.setUsername("testuser");
         user.setEmail("test@gmail.com");
         user.setPassword("password");
+
         return userRepository.save(user);
     }
 }
