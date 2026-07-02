@@ -16,7 +16,8 @@ public record ProductDTO(
         String slug,
         Set<String> genres,
         Set<String> platforms,
-        String developerName
+        String developerName,
+        String imageUrl
 ) {
     public ProductDTO(Product product) {
         this(
@@ -28,7 +29,8 @@ public record ProductDTO(
                 product.getSlug(),
                 product.getGenres().stream().map(g -> g.getName()).collect(Collectors.toSet()),
                 product.getPlatforms().stream().map(p -> p.getName()).collect(Collectors.toSet()),
-                product.getDeveloper() != null ? product.getDeveloper().getName() : null
+                product.getDeveloper() != null ? product.getDeveloper().getName() : null,
+                product.getImageUrl()
         );
     }
 }

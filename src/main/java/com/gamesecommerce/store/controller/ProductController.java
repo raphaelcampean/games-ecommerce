@@ -41,13 +41,15 @@ public class ProductController {
     }
 
     @GetMapping("/{slug}")
-    public ResponseEntity getProduct(@PathVariable String slug) {
+    public ResponseEntity<ProductDTO> getProduct(
+            @PathVariable String slug
+    ) {
         Product product = productService.findBySlug(slug);
 
         if (product == null) {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok().body(product);
+        return ResponseEntity.ok(new ProductDTO(product));
     }
 }
