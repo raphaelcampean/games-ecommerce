@@ -15,12 +15,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gamesecommerce.store.model.Genre;
 import com.gamesecommerce.store.model.Product;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 public class ProductRepositoryTest extends AbstractPostgresContainerTest {
     @Autowired
     private ProductRepository productRepository;
@@ -91,8 +93,12 @@ public class ProductRepositoryTest extends AbstractPostgresContainerTest {
     private Product createProduct() {
         Genre genre = createGenre();
 
-        Product product = new Product();
+        Product existingProduct = productRepository.findBySlug("test-game");
+        if (existingProduct != null) {
+            return existingProduct;
+        }
 
+        Product product = new Product();
         product.setName("Test Game");
         product.setSlug("test-game");
         product.setDescription("A test game description");
@@ -102,10 +108,14 @@ public class ProductRepositoryTest extends AbstractPostgresContainerTest {
     }
 
     private Genre createGenre() {
-        Genre genre = new Genre();
-        genre.setName("Action");
-        genre.setSlug("action");
-
-        return genreRepository.save(genre);
+        return genreRepository.findBySlug("action")
+            .orElseGet(
+                () -> {
+                    Genre genre = new Genre();
+                    genre.setName("Action");
+                    genre.setSlug("action");
+                    return genreRepository.save(genre);
+                }
+            );
     }
 }

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.gamesecommerce.store.config.AbstractPostgresContainerTest;
 import com.gamesecommerce.store.model.User;
@@ -15,6 +16,7 @@ import jakarta.persistence.EntityManager;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 class UserRepositoryTest extends AbstractPostgresContainerTest {
 
     @Autowired
