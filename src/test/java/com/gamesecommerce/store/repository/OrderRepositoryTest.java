@@ -98,6 +98,7 @@ class OrderRepositoryTest extends AbstractPostgresContainerTest {
         Product product = new Product();
         product.setName("Test Game");
         product.setDescription("A test game description");
+        product.setSlug("test-game");
         BigDecimal price = new BigDecimal("59.99");
         product.setPrice(price);
         entityManager.persist(product);
