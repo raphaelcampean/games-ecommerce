@@ -39,7 +39,7 @@ public class OrderService {
         }
 
         product.setStockQuantity(product.getStockQuantity() - dto.quantity());
-        productService.update(product);
+        productService.update(product.getId(), product);
 
         BigDecimal totalPrice = product.getPrice().multiply(BigDecimal.valueOf(dto.quantity()));
 
@@ -73,7 +73,7 @@ public class OrderService {
         }
 
         product.setStockQuantity(product.getStockQuantity() - dto.quantity());
-        productService.update(product);
+        productService.update(product.getId(), product);
 
         OrderItem existingItem = order.getItems().stream()
             .filter(item -> item.getProduct().getId().equals(product.getId()))

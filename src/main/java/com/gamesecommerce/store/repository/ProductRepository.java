@@ -1,6 +1,7 @@
 package com.gamesecommerce.store.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.domain.Page;
@@ -37,4 +38,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     List<Product> findByStockQuantityLessThan(int quantity);
     List<Product> findTop5ByOrderByCreatedAtDesc();
     long countByStockQuantityLessThan(int i);
+
+    Optional<Product> findBySlugOrName(String slug, String name);
 }

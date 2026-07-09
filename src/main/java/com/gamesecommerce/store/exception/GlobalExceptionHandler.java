@@ -32,7 +32,15 @@ public class GlobalExceptionHandler {
             Exception ex,
             HttpServletRequest request
     ) {
-        ErrorResponse error = new ErrorResponse(Instant.now(), HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error", "Unexpected error", request.getRequestURI());
+        ex.printStackTrace(); // ou use um logger
+
+        ErrorResponse error = new ErrorResponse(
+                Instant.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                "Internal Server Error",
+                ex.getMessage(), // temporariamente
+                request.getRequestURI()
+        );
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }

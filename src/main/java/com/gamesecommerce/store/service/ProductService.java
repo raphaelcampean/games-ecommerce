@@ -1,6 +1,7 @@
 package com.gamesecommerce.store.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import com.gamesecommerce.store.record.ProductDTO;
@@ -22,23 +23,23 @@ public class ProductService {
     }
 
     public Product create(Product product) {
-        Product existingProduct = findByName(product.getName());
-        
-        if (existingProduct != null) {
+        product.setSlug(generateSlug(product.getName()));
+
+        if (!verifyUnicity(product)) {
             throw new RuntimeException("Product with name '" + product.getName() + "' already exists.");
         }
 
-        product.setSlug(generateSlug(product.getName()));
-
         return productRepository.save(product);
+    }
+
+    public boolean verifyUnicity(Product product){
+        Optional<Product> existingProduct = productRepository.findBySlugOrName(product.getSlug(), product.getName());
+
+        return existingProduct.isEmpty();
     }
 
     public void deleteById(UUID id) {
         productRepository.deleteById(id);
-    }
-
-    public Product update(Product product) {
-        return productRepository.save(product);
     }
 
     public Page<ProductDTO> getProducts(Pageable pageable) {

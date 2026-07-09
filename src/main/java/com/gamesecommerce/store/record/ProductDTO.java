@@ -14,8 +14,8 @@ public record ProductDTO(
         BigDecimal price,
         int stockQuantity,
         String slug,
-        Set<String> genres,
-        Set<String> platforms,
+        Set<GenreDTO> genres,
+        Set<PlatformDTO> platforms,
         String developerName,
         String imageUrl
 ) {
@@ -27,9 +27,17 @@ public record ProductDTO(
                 product.getPrice(),
                 product.getStockQuantity(),
                 product.getSlug(),
-                product.getGenres().stream().map(g -> g.getName()).collect(Collectors.toSet()),
-                product.getPlatforms().stream().map(p -> p.getName()).collect(Collectors.toSet()),
-                product.getDeveloper() != null ? product.getDeveloper().getName() : null,
+                product.getGenres()
+                        .stream()
+                        .map(GenreDTO::new)
+                        .collect(Collectors.toSet()),
+                product.getPlatforms()
+                        .stream()
+                        .map(PlatformDTO::new)
+                        .collect(Collectors.toSet()),
+                product.getDeveloper() != null
+                        ? product.getDeveloper().getName()
+                        : null,
                 product.getImageUrl()
         );
     }

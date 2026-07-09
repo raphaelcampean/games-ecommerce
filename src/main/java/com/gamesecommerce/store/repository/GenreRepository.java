@@ -10,6 +10,5 @@ import java.util.UUID;
 @Repository
 public interface GenreRepository extends JpaRepository<Genre, UUID> {
     Optional<Genre> findBySlug(String slug);
-    
-    boolean existsByName(String name);
+    Optional<Genre> findByName(String name);
 }

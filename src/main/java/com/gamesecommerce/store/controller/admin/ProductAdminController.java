@@ -28,12 +28,20 @@ public class ProductAdminController {
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity getProduct(@PathVariable UUID id){
+        Product product = productService.findById(id);
+
+        return ResponseEntity.ok(product);
+    }
+
     @PostMapping
     public ResponseEntity createProduct(@RequestBody @Validated Product product) {
         Product createdProduct = productService.create(product);
 
         return ResponseEntity.status(201).body(createdProduct);
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity deleteProduct(@PathVariable UUID id) {
         productService.deleteById(id);
