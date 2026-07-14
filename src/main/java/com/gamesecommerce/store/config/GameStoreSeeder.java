@@ -119,7 +119,7 @@ public class GameStoreSeeder implements CommandLineRunner {
         gta.setPlatforms(
                 Set.of(pc, ps5, xbox)
         );
-
+        gta.setActive(true);
 
         Product tlou = new Product();
         tlou.setName("The Last of Us");
@@ -135,7 +135,7 @@ public class GameStoreSeeder implements CommandLineRunner {
         tlou.setPlatforms(
                 Set.of(ps4, ps5)
         );
-
+        tlou.setActive(true);
 
         Product cyberpunk = new Product();
         cyberpunk.setName("Cyberpunk 2077");
@@ -151,7 +151,7 @@ public class GameStoreSeeder implements CommandLineRunner {
         cyberpunk.setPlatforms(
                 Set.of(pc, ps5, xbox)
         );
-
+        cyberpunk.setActive(true);
 
         Product elden = new Product();
         elden.setName("Elden Ring");
@@ -167,7 +167,7 @@ public class GameStoreSeeder implements CommandLineRunner {
         elden.setPlatforms(
                 Set.of(pc, ps5, xbox)
         );
-
+        elden.setActive(true);
 
         Product halfLife = new Product();
         halfLife.setName("Half Life Alyx");
@@ -183,7 +183,7 @@ public class GameStoreSeeder implements CommandLineRunner {
         halfLife.setPlatforms(
                 Set.of(pc)
         );
-
+        halfLife.setActive(true);
 
         productRepository.saveAll(
                 List.of(

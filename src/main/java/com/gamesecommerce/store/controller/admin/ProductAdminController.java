@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -30,7 +31,7 @@ public class ProductAdminController {
 
     @GetMapping("/{id}")
     public ResponseEntity getProduct(@PathVariable UUID id){
-        Product product = productService.findById(id);
+        Optional<Product> product = productService.findProductById(id);
 
         return ResponseEntity.ok(product);
     }

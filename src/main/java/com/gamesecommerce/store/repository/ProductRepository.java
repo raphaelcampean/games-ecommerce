@@ -32,6 +32,15 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
         WHERE p.slug = :slug
     """)
     Product findBySlug(@Param("slug") String slug);
+
+    @Query("""
+        SELECT DISTINCT p FROM Product p
+        LEFT JOIN FETCH p.genres
+        LEFT JOIN FETCH p.platforms
+        LEFT JOIN FETCH p.developer
+        WHERE p.id = :id
+    """)
+    Optional<Product> findProductById(@Param("id") UUID id);
     List<Product> findByGenres_Slug(String genreSlug);
     List<Product> findByDeveloper_Slug(String developerSlug);
     List<Product> findByPlatforms_Slug(String platformSlug);

@@ -14,6 +14,7 @@ public record ProductDTO(
         BigDecimal price,
         int stockQuantity,
         String slug,
+        boolean active,
         Set<GenreDTO> genres,
         Set<PlatformDTO> platforms,
         String developerName,
@@ -27,6 +28,7 @@ public record ProductDTO(
                 product.getPrice(),
                 product.getStockQuantity(),
                 product.getSlug(),
+                product.isActive(),
                 product.getGenres()
                         .stream()
                         .map(GenreDTO::new)

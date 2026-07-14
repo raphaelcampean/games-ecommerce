@@ -52,23 +52,32 @@ public class ProductService {
     }
 
     public Product update(UUID id, Product product) {
-        Product existingProduct = findById(id);
-
-        if (existingProduct == null) {
-            throw new RuntimeException("Product with id '" + id + "' not found.");
-        }
+        Product existingProduct = productRepository.findProductById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Product with id " + id + " not found.")
+                );
 
         if (product.getName() != null && !product.getName().equals(existingProduct.getName())) {
             existingProduct.setName(product.getName());
             existingProduct.setSlug(generateSlug(product.getName()));
-        } else {
-            existingProduct.setName(existingProduct.getName());
-            existingProduct.setSlug(existingProduct.getSlug());
         }
 
-        existingProduct.setDescription(product.getDescription() == null ? existingProduct.getDescription() : product.getDescription());
-        existingProduct.setPrice(product.getPrice() == null ? existingProduct.getPrice() : product.getPrice());
-        existingProduct.setStockQuantity(product.getStockQuantity() != existingProduct.getStockQuantity() ? product.getStockQuantity() : existingProduct.getStockQuantity());
+        existingProduct.setDescription(
+                product.getDescription() == null
+                        ? existingProduct.getDescription()
+                        : product.getDescription()
+        );
+
+        existingProduct.setPrice(
+                product.getPrice() == null
+                        ? existingProduct.getPrice()
+                        : product.getPrice()
+        );
+
+        existingProduct.setStockQuantity(product.getStockQuantity());
+
+        existingProduct.setActive(product.isActive());
+
         return productRepository.save(existingProduct);
     }
 
@@ -78,6 +87,10 @@ public class ProductService {
 
     public Product findBySlug(String slug) {
         return productRepository.findBySlug(slug);
+    }
+
+    public Optional<Product> findProductById(UUID id){
+        return productRepository.findProductById(id);
     }
 
     public long countProducts(){
