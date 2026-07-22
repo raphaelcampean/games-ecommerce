@@ -1,5 +1,10 @@
 package com.gamesecommerce.store.controller;
 
+import com.gamesecommerce.store.record.AuthResponseDTO;
+import com.gamesecommerce.store.record.RegisterResponseDTO;
+import com.gamesecommerce.store.record.UserDTO;
+import com.gamesecommerce.store.record.UserRequestDTO;
+import com.gamesecommerce.store.service.TokenService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,12 +31,28 @@ import com.gamesecommerce.store.service.UserService;
 public class UserController {
     @Autowired
     UserService userService;
-    
+
+    @Autowired
+    TokenService tokenService;
+
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody @Validated User user) {
-        return ResponseEntity.status(201).body(userService.create(user));
+    public ResponseEntity<AuthResponseDTO> createUser(
+            @RequestBody @Validated UserRequestDTO data
+    ) {
+
+        User savedUser = userService.create(data);
+
+        String token = tokenService.generateToken(savedUser);
+
+        return ResponseEntity.status(201)
+                .body(
+                        new AuthResponseDTO(
+                                new UserDTO(savedUser),
+                                token
+                        )
+                );
     }
-    
+
     @GetMapping("/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         User user = userService.findByUsername(username)
@@ -39,13 +60,20 @@ public class UserController {
             
         return ResponseEntity.ok(user);
     }
-    
+
     @PutMapping("/{id}")
-    public ResponseEntity<User> editUser(@PathVariable UUID id, @RequestBody @Validated User user) {
+    public ResponseEntity<User> editUser(
+            @PathVariable UUID id,
+            @RequestBody @Validated UserRequestDTO dto
+    ) {
         try {
+            User user = new User();
             user.setId(id);
-            userService.edit(user);
-            return ResponseEntity.ok(user);
+
+            User updatedUser = userService.edit(user, dto);
+
+            return ResponseEntity.ok(updatedUser);
+
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }

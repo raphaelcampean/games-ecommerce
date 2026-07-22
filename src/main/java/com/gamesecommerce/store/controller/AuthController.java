@@ -1,5 +1,8 @@
 package com.gamesecommerce.store.controller;
 
+import com.gamesecommerce.store.record.AuthResponseDTO;
+import com.gamesecommerce.store.record.LoginRequestDTO;
+import com.gamesecommerce.store.record.UserDTO;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.gamesecommerce.store.model.User;
-import com.gamesecommerce.store.record.AuthenticationDTO;
 import com.gamesecommerce.store.record.LoginResponseDTO;
 import com.gamesecommerce.store.service.TokenService;
 
@@ -23,13 +25,27 @@ public class AuthController {
     TokenService tokenService;
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody @Validated AuthenticationDTO data) {
-        var usernamePassword = new UsernamePasswordAuthenticationToken(data.email(), data.password());
+    public ResponseEntity<AuthResponseDTO> login(
+            @RequestBody @Validated LoginRequestDTO data
+    ) {
 
-        var auth = this.authenticationManager.authenticate(usernamePassword);
+        var usernamePassword =
+                new UsernamePasswordAuthenticationToken(
+                        data.login(),
+                        data.password()
+                );
 
-        var token = tokenService.generateToken((User) auth.getPrincipal());
-        
-        return ResponseEntity.ok(new LoginResponseDTO(token));
+        var auth = authenticationManager.authenticate(usernamePassword);
+
+        var user = (User) auth.getPrincipal();
+
+        var token = tokenService.generateToken(user);
+
+        return ResponseEntity.ok(
+                new AuthResponseDTO(
+                        new UserDTO(user),
+                        token
+                )
+        );
     }
 }

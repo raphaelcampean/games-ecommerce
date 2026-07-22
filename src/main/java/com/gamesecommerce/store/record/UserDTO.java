@@ -1,7 +1,7 @@
 package com.gamesecommerce.store.record;
 
 import com.gamesecommerce.store.model.User;
-
+import com.gamesecommerce.store.model.Role;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -9,7 +9,7 @@ public record UserDTO(
         UUID id,
         String username,
         String email,
-        String role,
+        Role role,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -18,7 +18,7 @@ public record UserDTO(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
-                user.getRole().name(),
+                user.getRole(),
                 user.getCreatedAt(),
                 user.getUpdatedAt()
         );

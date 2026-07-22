@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.gamesecommerce.store.model.Role;
 import com.gamesecommerce.store.record.ProductDTO;
 import com.gamesecommerce.store.record.UserDTO;
+import com.gamesecommerce.store.record.UserRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,11 +42,19 @@ public class UserService {
         return userRepository.findByUsernameOrEmail(username, email);
     }
 
-    public User create(User user) {
-        if (findByUsernameOrEmail(user.getUsername(), user.getEmail()).isPresent()) {
+    public User create(UserRequestDTO data) {
+        if (findByUsernameOrEmail(data.username(), data.email()).isPresent()) {
             throw new RuntimeException("User with the same username or email already exists.");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        User user = new User();
+
+        user.setUsername(data.username());
+        user.setEmail(data.email());
+        user.setName(data.name());
+        user.setPassword(passwordEncoder.encode(data.password()));
+        user.setRole(Role.USER);
+
         return userRepository.save(user);
     }
 
@@ -52,24 +62,34 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public User edit(User user) {
-        User existingUser = userRepository.findById(user.getId()).orElseThrow(() -> new RuntimeException("User not found with id: " + user.getId()));
-        
-        if (!existingUser.getUsername().equals(user.getUsername()) && findByUsername(user.getUsername()).isPresent()) {
-            throw new RuntimeException("Username '" + user.getUsername() + "' is already taken.");
-        }
-        
-        if (!existingUser.getEmail().equals(user.getEmail()) && findByEmail(user.getEmail()).isPresent()) {
-            throw new RuntimeException("Email '" + user.getEmail() + "' is already in use.");
+    public User edit(User user, UserRequestDTO dto) {
+        User existingUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + user.getId()));
+
+        if (!existingUser.getUsername().equals(dto.username())
+                && findByUsername(dto.username()).isPresent()) {
+            throw new RuntimeException("Username '" + dto.username() + "' is already taken.");
         }
 
-        existingUser.setUsername(user.getUsername());
-        existingUser.setEmail(user.getEmail());
-        
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        if (!existingUser.getEmail().equals(dto.email())
+                && findByEmail(dto.email()).isPresent()) {
+            throw new RuntimeException("Email '" + dto.email() + "' is already in use.");
         }
-        
+
+        existingUser.setUsername(dto.username());
+        existingUser.setEmail(dto.email());
+        existingUser.setName(dto.name());
+
+        if (dto.password() != null && !dto.password().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(dto.password()));
+        }
+
         return userRepository.save(existingUser);
+    }
+
+    public User findByLogin(String login) {
+        return userRepository.findByUsername(login)
+                .or(() -> userRepository.findByEmail(login))
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }

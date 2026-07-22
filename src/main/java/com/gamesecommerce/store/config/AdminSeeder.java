@@ -1,5 +1,6 @@
 package com.gamesecommerce.store.config;
 
+import com.gamesecommerce.store.model.Role;
 import com.gamesecommerce.store.model.User;
 import com.gamesecommerce.store.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -27,7 +28,7 @@ public class AdminSeeder implements CommandLineRunner {
             admin.setUsername("admin");
             admin.setEmail("admin@gamestore.com");
             admin.setPassword(passwordEncoder.encode("admin123"));
-            admin.setRole(User.Role.ADMIN);
+            admin.setRole(Role.ADMIN);
 
             userRepository.save(admin);
 
