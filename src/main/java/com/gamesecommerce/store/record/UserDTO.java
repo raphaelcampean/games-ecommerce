@@ -9,6 +9,7 @@ public record UserDTO(
         UUID id,
         String username,
         String email,
+        String name,
         Role role,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
@@ -18,6 +19,7 @@ public record UserDTO(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
+                user.getName(),
                 user.getRole(),
                 user.getCreatedAt(),
                 user.getUpdatedAt()

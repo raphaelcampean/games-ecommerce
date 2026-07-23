@@ -5,6 +5,7 @@ import com.gamesecommerce.store.record.RegisterResponseDTO;
 import com.gamesecommerce.store.record.UserDTO;
 import com.gamesecommerce.store.record.UserRequestDTO;
 import com.gamesecommerce.store.service.TokenService;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -87,5 +88,14 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error deleting user: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserDTO> me(Authentication authentication){
+        User user = (User) authentication.getPrincipal();
+
+        return ResponseEntity.ok(
+                new UserDTO(user)
+        );
     }
 }
